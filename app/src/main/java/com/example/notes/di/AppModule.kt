@@ -5,8 +5,10 @@ import androidx.room.Room
 import com.example.notes.feature_note.data.repository.NoteRepositoryImpl
 import com.example.notes.feature_note.data.source.NoteDatabase
 import com.example.notes.feature_note.domain.repository.NoteRepository
+import com.example.notes.feature_note.domain.use_case.AddNote
 import com.example.notes.feature_note.domain.use_case.DeleteNote
 import com.example.notes.feature_note.domain.use_case.GetNotes
+import com.example.notes.feature_note.domain.use_case.OrderNotes
 import com.example.notes.feature_note.domain.use_case.UseCases
 import dagger.Module
 import dagger.Provides
@@ -39,7 +41,9 @@ object AppModule {
     fun provideNoteUseCases(repository: NoteRepository) : UseCases {
         return UseCases(
             getNotes = GetNotes(repository),
-            deleteNote = DeleteNote(repository)
+            deleteNote = DeleteNote(repository),
+            addNote = AddNote(repository),
+            orderNotes = OrderNotes()
         )
     }
 }
