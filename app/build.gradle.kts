@@ -70,10 +70,10 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
-//    // Compose View Model
-//    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
-//    // Compose Navigation
-//    implementation("androidx.navigation:navigation-compose:2.6.0")
+    // Compose View Model
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
+    // Compose Navigation
+    implementation("androidx.navigation:navigation-compose:2.6.0")
 //    // Retrofit with Kotlin serialization Converter
 //    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
 //    implementation("com.squareup.okhttp3:okhttp:4.11.0")
@@ -88,4 +88,5 @@ dependencies {
     // Hilt
     implementation("com.google.dagger:hilt-android:2.44")
     kapt("com.google.dagger:hilt-compiler:2.44")
+    implementation ("androidx.hilt:hilt-navigation-compose:1.1.0-alpha01")
 }
