@@ -5,7 +5,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,6 +25,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
@@ -45,7 +46,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun NotesScreen(
     modifier: Modifier = Modifier,
-    navController: NavController,
+//    navController: NavController,
     viewModel: NotesViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.value
@@ -55,10 +56,21 @@ fun NotesScreen(
     val scope = rememberCoroutineScope()
 
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {},
-                modifier = Modifier.background(MaterialTheme.colorScheme.primary)
+                onClick = {
+                    scope.launch {
+                        val result = snackbarHostState.showSnackbar(
+                            message = "Note Deleted",
+                            actionLabel = "Undo",
+                            duration = SnackbarDuration.Short
+                        )
+                        if (result == SnackbarResult.ActionPerformed) {
+                            viewModel.onEvent(NotesEvent.RestoreNote)
+                        }
+                    }
+                },
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add Note")
             }
@@ -110,8 +122,11 @@ fun NotesScreen(
                         onDelete = {
                             viewModel.onEvent(NotesEvent.DeleteNote(note))
                             scope.launch {
-                                val result = snackbarHostState.showSnackbar(message = "Note Deleted", actionLabel = "Undo")
-                                if(result == SnackbarResult.ActionPerformed) {
+                                val result = snackbarHostState.showSnackbar(
+                                    message = "Note Deleted",
+                                    actionLabel = "Undo"
+                                )
+                                if (result == SnackbarResult.ActionPerformed) {
                                     viewModel.onEvent(NotesEvent.RestoreNote)
                                 }
                             }
