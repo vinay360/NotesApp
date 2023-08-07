@@ -1,5 +1,6 @@
 package com.example.notes.feature_note.presentation.notes
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -40,13 +41,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.notes.feature_note.presentation.notes.components.NoteItem
 import com.example.notes.feature_note.presentation.notes.components.OrderSection
+import com.example.notes.feature_note.presentation.util.Screen
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotesScreen(
     modifier: Modifier = Modifier,
-//    navController: NavController,
+    navController: NavController,
     viewModel: NotesViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.value
@@ -60,16 +64,7 @@ fun NotesScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    scope.launch {
-                        val result = snackbarHostState.showSnackbar(
-                            message = "Note Deleted",
-                            actionLabel = "Undo",
-                            duration = SnackbarDuration.Short
-                        )
-                        if (result == SnackbarResult.ActionPerformed) {
-                            viewModel.onEvent(NotesEvent.RestoreNote)
-                        }
-                    }
+                    navController.navigate(Screen.AddEditNoteScreen.route)
                 },
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add Note")
@@ -81,7 +76,6 @@ fun NotesScreen(
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            print(it)
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -118,13 +112,16 @@ fun NotesScreen(
                         note = note,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { },
+                            .clickable {
+                                navController.navigate(Screen.AddEditNoteScreen.route + "?noteId=${note.id}&noteColor=${note.color}")
+                            },
                         onDelete = {
                             viewModel.onEvent(NotesEvent.DeleteNote(note))
                             scope.launch {
                                 val result = snackbarHostState.showSnackbar(
                                     message = "Note Deleted",
-                                    actionLabel = "Undo"
+                                    actionLabel = "Undo",
+                                    duration = SnackbarDuration.Short
                                 )
                                 if (result == SnackbarResult.ActionPerformed) {
                                     viewModel.onEvent(NotesEvent.RestoreNote)
